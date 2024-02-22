@@ -1,0 +1,13 @@
+#!/bin/bash
+
+docker buildx create --name image-builder --driver docker-container --bootstrap 2> /dev/null || true
+docker buildx use image-builder
+
+docker buildx build \
+  --pull \
+  --push \
+  --build-arg VERSION=${DOCKER_TAG} \
+  .  \
+  --platform linux/arm64,linux/amd64 \
+  -t ${IMAGE_NAME} \
+  -t ${DOCKER_REPO}:latest
